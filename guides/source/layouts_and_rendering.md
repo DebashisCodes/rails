@@ -1,34 +1,31 @@
 **DO NOT READ THIS FILE ON GITHUB, GUIDES ARE PUBLISHED ON https://guides.rubyonrails.org.**
 
-Layouts and Rendering in Rails
-==============================
+# Layouts and Rendering in Rails
 
 This guide covers the basic layout features of Action Controller and Action View.
 
 After reading this guide, you will know:
 
-* How to use the various rendering methods built into Rails.
-* How to create layouts with multiple content sections.
-* How to use partials to DRY up your views.
-* How to use nested layouts (sub-templates).
+- How to use the various rendering methods built into Rails.
+- How to create layouts with multiple content sections.
+- How to use partials to DRY up your views.
+- How to use nested layouts (sub-templates).
 
---------------------------------------------------------------------------------
+---
 
-Overview: How the Pieces Fit Together
--------------------------------------
+## Overview: How the Pieces Fit Together
 
 This guide focuses on the interaction between Controller and View in the Model-View-Controller triangle. As you know, the Controller is responsible for orchestrating the whole process of handling a request in Rails, though it normally hands off any heavy code to the Model. But then, when it's time to send a response back to the user, the Controller hands things off to the View. It's that handoff that is the subject of this guide.
 
 In broad strokes, this involves deciding what should be sent as the response and calling an appropriate method to create that response. If the response is a full-blown view, Rails also does some extra work to wrap the view in a layout and possibly to pull in partial views. You'll see all of those paths later in this guide.
 
-Creating Responses
-------------------
+## Creating Responses
 
 From the controller's point of view, there are three ways to create an HTTP response:
 
-* Call [`render`][controller.render] to create a full response to send back to the browser
-* Call [`redirect_to`][] to send an HTTP redirect status code to the browser
-* Call [`head`][] to create a response consisting solely of HTTP headers to send back to the browser
+- Call [`render`][controller.render] to create a full response to send back to the browser
+- Call [`redirect_to`][] to send an HTTP redirect status code to the browser
+- Call [`head`][] to create a response consisting solely of HTTP headers to send back to the browser
 
 [controller.render]: https://api.rubyonrails.org/classes/ActionController/Rendering.html#method-i-render
 [`redirect_to`]: https://api.rubyonrails.org/classes/ActionController/Redirecting.html#method-i-redirect_to
@@ -311,12 +308,12 @@ render renderable: Greeting.new
 
 Calls to the [`render`][controller.render] method generally accept six options:
 
-* `:content_type`
-* `:layout`
-* `:location`
-* `:status`
-* `:formats`
-* `:variants`
+- `:content_type`
+- `:layout`
+- `:location`
+- `:status`
+- `:formats`
+- `:variants`
 
 ##### The `:content_type` Option
 
@@ -361,69 +358,69 @@ render status: :forbidden
 
 Rails understands both numeric status codes and the corresponding symbols shown below.
 
-| Response Class      | HTTP Status Code | Symbol                           |
-| ------------------- | ---------------- | -------------------------------- |
-| **Informational**   | 100              | :continue                        |
-|                     | 101              | :switching_protocols             |
-|                     | 102              | :processing                      |
-| **Success**         | 200              | :ok                              |
-|                     | 201              | :created                         |
-|                     | 202              | :accepted                        |
-|                     | 203              | :non_authoritative_information   |
-|                     | 204              | :no_content                      |
-|                     | 205              | :reset_content                   |
-|                     | 206              | :partial_content                 |
-|                     | 207              | :multi_status                    |
-|                     | 208              | :already_reported                |
-|                     | 226              | :im_used                         |
-| **Redirection**     | 300              | :multiple_choices                |
-|                     | 301              | :moved_permanently               |
-|                     | 302              | :found                           |
-|                     | 303              | :see_other                       |
-|                     | 304              | :not_modified                    |
-|                     | 305              | :use_proxy                       |
-|                     | 307              | :temporary_redirect              |
-|                     | 308              | :permanent_redirect              |
-| **Client Error**    | 400              | :bad_request                     |
-|                     | 401              | :unauthorized                    |
-|                     | 402              | :payment_required                |
-|                     | 403              | :forbidden                       |
-|                     | 404              | :not_found                       |
-|                     | 405              | :method_not_allowed              |
-|                     | 406              | :not_acceptable                  |
-|                     | 407              | :proxy_authentication_required   |
-|                     | 408              | :request_timeout                 |
-|                     | 409              | :conflict                        |
-|                     | 410              | :gone                            |
-|                     | 411              | :length_required                 |
-|                     | 412              | :precondition_failed             |
-|                     | 413              | :payload_too_large               |
-|                     | 414              | :uri_too_long                    |
-|                     | 415              | :unsupported_media_type          |
-|                     | 416              | :range_not_satisfiable           |
-|                     | 417              | :expectation_failed              |
-|                     | 421              | :misdirected_request             |
-|                     | 422              | :unprocessable_entity            |
-|                     | 423              | :locked                          |
-|                     | 424              | :failed_dependency               |
-|                     | 426              | :upgrade_required                |
-|                     | 428              | :precondition_required           |
-|                     | 429              | :too_many_requests               |
-|                     | 431              | :request_header_fields_too_large |
-|                     | 451              | :unavailable_for_legal_reasons   |
-| **Server Error**    | 500              | :internal_server_error           |
-|                     | 501              | :not_implemented                 |
-|                     | 502              | :bad_gateway                     |
-|                     | 503              | :service_unavailable             |
-|                     | 504              | :gateway_timeout                 |
-|                     | 505              | :http_version_not_supported      |
-|                     | 506              | :variant_also_negotiates         |
-|                     | 507              | :insufficient_storage            |
-|                     | 508              | :loop_detected                   |
-|                     | 510              | :not_extended                    |
-|                     | 511              | :network_authentication_required |
+| Response Class    | HTTP Status Code | Symbol                           |
+| ----------------- | ---------------- | -------------------------------- |
+| **Informational** | 100              | :continue                        |
+|                   | 101              | :switching_protocols             |
+|                   | 102              | :processing                      |
+| **Success**       | 200              | :ok                              |
+|                   | 201              | :created                         |
+|                   | 202              | :accepted                        |
+|                   | 203              | :non_authoritative_information   |
+|                   | 204              | :no_content                      |
+|                   | 205              | :reset_content                   |
+|                   | 206              | :partial_content                 |
+|                   | 207              | :multi_status                    |
+|                   | 208              | :already_reported                |
+|                   | 226              | :im_used                         |
+| **Redirection**   | 300              | :multiple_choices                |
+|                   | 301              | :moved_permanently               |
+|                   | 302              | :found                           |
+|                   | 303              | :see_other                       |
+|                   | 304              | :not_modified                    |
+|                   | 305              | :use_proxy                       |
+|                   | 307              | :temporary_redirect              |
+|                   | 308              | :permanent_redirect              |
+| **Client Error**  | 400              | :bad_request                     |
+|                   | 401              | :unauthorized                    |
+|                   | 402              | :payment_required                |
+|                   | 403              | :forbidden                       |
+|                   | 404              | :not_found                       |
+|                   | 405              | :method_not_allowed              |
+|                   | 406              | :not_acceptable                  |
+|                   | 407              | :proxy_authentication_required   |
+|                   | 408              | :request_timeout                 |
+|                   | 409              | :conflict                        |
+|                   | 410              | :gone                            |
+|                   | 411              | :length_required                 |
+|                   | 412              | :precondition_failed             |
+|                   | 413              | :payload_too_large               |
+|                   | 414              | :uri_too_long                    |
+|                   | 415              | :unsupported_media_type          |
+|                   | 416              | :range_not_satisfiable           |
+|                   | 417              | :expectation_failed              |
+|                   | 421              | :misdirected_request             |
+|                   | 422              | :unprocessable_entity            |
+|                   | 423              | :locked                          |
+|                   | 424              | :failed_dependency               |
+|                   | 426              | :upgrade_required                |
+|                   | 428              | :precondition_required           |
+|                   | 429              | :too_many_requests               |
+|                   | 431              | :request_header_fields_too_large |
+|                   | 451              | :unavailable_for_legal_reasons   |
+| **Server Error**  | 500              | :internal_server_error           |
+|                   | 501              | :not_implemented                 |
+|                   | 502              | :bad_gateway                     |
+|                   | 503              | :service_unavailable             |
+|                   | 504              | :gateway_timeout                 |
+|                   | 505              | :http_version_not_supported      |
+|                   | 506              | :variant_also_negotiates         |
+|                   | 507              | :insufficient_storage            |
+|                   | 508              | :loop_detected                   |
+|                   | 510              | :not_extended                    |
+|                   | 511              | :network_authentication_required |
 
-NOTE:  If you try to render content along with a non-content status code
+NOTE: If you try to render content along with a non-content status code
 (100-199, 204, 205, or 304), it will be dropped from the response.
 
 ##### The `:formats` Option
@@ -550,54 +547,54 @@ With this declaration, the `product` layout would be used for everything but the
 
 Layout declarations cascade downward in the hierarchy, and more specific layout declarations always override more general ones. For example:
 
-* `application_controller.rb`
+- `application_controller.rb`
 
-    ```ruby
-    class ApplicationController < ActionController::Base
-      layout "main"
+  ```ruby
+  class ApplicationController < ActionController::Base
+    layout "main"
+  end
+  ```
+
+- `articles_controller.rb`
+
+  ```ruby
+  class ArticlesController < ApplicationController
+  end
+  ```
+
+- `special_articles_controller.rb`
+
+  ```ruby
+  class SpecialArticlesController < ArticlesController
+    layout "special"
+  end
+  ```
+
+- `old_articles_controller.rb`
+
+  ```ruby
+  class OldArticlesController < SpecialArticlesController
+    layout false
+
+    def show
+      @article = Article.find(params[:id])
     end
-    ```
 
-* `articles_controller.rb`
-
-    ```ruby
-    class ArticlesController < ApplicationController
+    def index
+      @old_articles = Article.older
+      render layout: "old"
     end
-    ```
-
-* `special_articles_controller.rb`
-
-    ```ruby
-    class SpecialArticlesController < ArticlesController
-      layout "special"
-    end
-    ```
-
-* `old_articles_controller.rb`
-
-    ```ruby
-    class OldArticlesController < SpecialArticlesController
-      layout false
-
-      def show
-        @article = Article.find(params[:id])
-      end
-
-      def index
-        @old_articles = Article.older
-        render layout: "old"
-      end
-      # ...
-    end
-    ```
+    # ...
+  end
+  ```
 
 In this application:
 
-* In general, views will be rendered in the `main` layout
-* `ArticlesController#index` will use the `main` layout
-* `SpecialArticlesController#index` will use the `special` layout
-* `OldArticlesController#show` will use no layout at all
-* `OldArticlesController#index` will use the `old` layout
+- In general, views will be rendered in the `main` layout
+- `ArticlesController#index` will use the `main` layout
+- `SpecialArticlesController#index` will use the `special` layout
+- `OldArticlesController#show` will use no layout at all
+- `OldArticlesController#index` will use the `old` layout
 
 ##### Template Inheritance
 
@@ -625,9 +622,9 @@ end
 
 The lookup order for an `admin/products#index` action will be:
 
-* `app/views/admin/products/`
-* `app/views/admin/`
-* `app/views/application/`
+- `app/views/admin/products/`
+- `app/views/admin/`
+- `app/views/application/`
 
 This makes `app/views/application/` a great place for your shared partials, which can then be rendered in your ERB as such:
 
@@ -817,14 +814,13 @@ Set-Cookie: _blog_session=...snip...; path=/; HttpOnly
 Cache-Control: no-cache
 ```
 
-Structuring Layouts
--------------------
+## Structuring Layouts
 
 When Rails renders a view as a response, it does so by combining the view with the current layout, using the rules for finding the current layout that were covered earlier in this guide. Within a layout, you have access to three tools for combining different bits of output to form the overall response:
 
-* Asset tags
-* `yield` and [`content_for`][]
-* Partials
+- Asset tags
+- `yield` and [`content_for`][]
+- Partials
 
 [`content_for`]: https://api.rubyonrails.org/classes/ActionView/Helpers/CaptureHelper.html#method-i-content_for
 
@@ -832,12 +828,12 @@ When Rails renders a view as a response, it does so by combining the view with t
 
 Asset tag helpers provide methods for generating HTML that link views to feeds, JavaScript, stylesheets, images, videos, and audios. There are six asset tag helpers available in Rails:
 
-* [`auto_discovery_link_tag`][]
-* [`javascript_include_tag`][]
-* [`stylesheet_link_tag`][]
-* [`image_tag`][]
-* [`video_tag`][]
-* [`audio_tag`][]
+- [`auto_discovery_link_tag`][]
+- [`javascript_include_tag`][]
+- [`stylesheet_link_tag`][]
+- [`image_tag`][]
+- [`video_tag`][]
+- [`audio_tag`][]
 
 You can use these tags in layouts or other views, although the `auto_discovery_link_tag`, `javascript_include_tag`, and `stylesheet_link_tag`, are most commonly used in the `<head>` section of a layout.
 
@@ -861,9 +857,9 @@ The [`auto_discovery_link_tag`][] helper builds HTML that most browsers and feed
 
 There are three tag options available for the `auto_discovery_link_tag`:
 
-* `:rel` specifies the `rel` value in the link. The default value is "alternate".
-* `:type` specifies an explicit MIME type. Rails will generate an appropriate MIME type automatically.
-* `:title` specifies the title of the link. The default value is the uppercase `:type` value, for example, "ATOM" or "RSS".
+- `:rel` specifies the `rel` value in the link. The default value is "alternate".
+- `:type` specifies an explicit MIME type. Rails will generate an appropriate MIME type automatically.
+- `:title` specifies the title of the link. The default value is the uppercase `:type` value, for example, "ATOM" or "RSS".
 
 #### Linking to JavaScript Files with the `javascript_include_tag`
 
@@ -873,7 +869,7 @@ If you are using Rails with the [Asset Pipeline](asset_pipeline.html) enabled, t
 
 A JavaScript file within a Rails application or Rails engine goes in one of three locations: `app/assets`, `lib/assets` or `vendor/assets`. These locations are explained in detail in the [Asset Organization section in the Asset Pipeline Guide](asset_pipeline.html#asset-organization).
 
-You can specify a full path relative to the document root, or a URL, if you prefer. For example, to link to a JavaScript file that is inside a directory called `javascripts` inside of one of `app/assets`, `lib/assets` or `vendor/assets`, you would do this:
+You can specify a full path relative to the document root, or a URL, if you prefer. For example, to link to a JavaScript file main.js that is inside a directory called `app/assets/javascripts`, `lib/assets/javascripts`, or `vendor/assets/javascripts`, you would do this:
 
 ```erb
 <%= javascript_include_tag "main" %>
@@ -882,7 +878,7 @@ You can specify a full path relative to the document root, or a URL, if you pref
 Rails will then output a `script` tag such as this:
 
 ```html
-<script src='/assets/main.js'></script>
+<script src="/assets/main.js"></script>
 ```
 
 The request to this asset is then served by the Sprockets gem.
@@ -1002,11 +998,11 @@ Like an `image_tag` you can supply a path, either absolute, or relative to the `
 
 The video tag also supports all of the `<video>` HTML options through the HTML options hash, including:
 
-* `poster: "image_name.png"`, provides an image to put in place of the video before it starts playing.
-* `autoplay: true`, starts playing the video on page load.
-* `loop: true`, loops the video once it gets to the end.
-* `controls: true`, provides browser supplied controls for the user to interact with the video.
-* `autobuffer: true`, the video will pre load the file for the user on page load.
+- `poster: "image_name.png"`, provides an image to put in place of the video before it starts playing.
+- `autoplay: true`, starts playing the video on page load.
+- `loop: true`, loops the video once it gets to the end.
+- `controls: true`, provides browser supplied controls for the user to interact with the video.
+- `autobuffer: true`, the video will pre load the file for the user on page load.
 
 You can also specify multiple videos to play by passing an array of videos to the `video_tag`:
 
@@ -1041,9 +1037,9 @@ You can also supply a hash of additional options, such as `:id`, `:class`, etc.
 
 Like the `video_tag`, the `audio_tag` has special options:
 
-* `autoplay: true`, starts playing the audio on page load
-* `controls: true`, provides browser supplied controls for the user to interact with the audio.
-* `autobuffer: true`, the audio will pre load the file for the user on page load.
+- `autoplay: true`, starts playing the audio on page load
+- `controls: true`, provides browser supplied controls for the user to interact with the audio.
+- `autobuffer: true`, the audio will pre load the file for the user on page load.
 
 ### Understanding `yield`
 
@@ -1148,39 +1144,39 @@ for cleaning up your layouts. Keep in mind that it's pure Ruby, so you can use
 it almost everywhere. For example, we can use it to DRY up form layout
 definitions for several similar resources:
 
-* `users/index.html.erb`
+- `users/index.html.erb`
 
-    ```html+erb
-    <%= render "application/search_filters", search: @q do |form| %>
-      <p>
-        Name contains: <%= form.text_field :name_contains %>
-      </p>
-    <% end %>
-    ```
+  ```html+erb
+  <%= render "application/search_filters", search: @q do |form| %>
+    <p>
+      Name contains: <%= form.text_field :name_contains %>
+    </p>
+  <% end %>
+  ```
 
-* `roles/index.html.erb`
+- `roles/index.html.erb`
 
-    ```html+erb
-    <%= render "application/search_filters", search: @q do |form| %>
-      <p>
-        Title contains: <%= form.text_field :title_contains %>
-      </p>
-    <% end %>
-    ```
+  ```html+erb
+  <%= render "application/search_filters", search: @q do |form| %>
+    <p>
+      Title contains: <%= form.text_field :title_contains %>
+    </p>
+  <% end %>
+  ```
 
-* `application/_search_filters.html.erb`
+- `application/_search_filters.html.erb`
 
-    ```html+erb
-    <%= form_with model: search do |form| %>
-      <h1>Search form:</h1>
-      <fieldset>
-        <%= yield form %>
-      </fieldset>
-      <p>
-        <%= form.submit "Search" %>
-      </p>
-    <% end %>
-    ```
+  ```html+erb
+  <%= form_with model: search do |form| %>
+    <h1>Search form:</h1>
+    <fieldset>
+      <%= yield form %>
+    </fieldset>
+    <p>
+      <%= form.submit "Search" %>
+    </p>
+  <% end %>
+  ```
 
 TIP: For content that is shared among all pages in your application, you can use partials directly from layouts.
 
@@ -1200,61 +1196,61 @@ Also note that explicitly specifying `:partial` is required when passing additio
 
 You can also pass local variables into partials, making them even more powerful and flexible. For example, you can use this technique to reduce duplication between new and edit pages, while still keeping a bit of distinct content:
 
-* `new.html.erb`
+- `new.html.erb`
 
-    ```html+erb
-    <h1>New zone</h1>
-    <%= render partial: "form", locals: {zone: @zone} %>
-    ```
+  ```html+erb
+  <h1>New zone</h1>
+  <%= render partial: "form", locals: {zone: @zone} %>
+  ```
 
-* `edit.html.erb`
+- `edit.html.erb`
 
-    ```html+erb
-    <h1>Editing zone</h1>
-    <%= render partial: "form", locals: {zone: @zone} %>
-    ```
+  ```html+erb
+  <h1>Editing zone</h1>
+  <%= render partial: "form", locals: {zone: @zone} %>
+  ```
 
-* `_form.html.erb`
+- `_form.html.erb`
 
-    ```html+erb
-    <%= form_with model: zone do |form| %>
-      <p>
-        <b>Zone name</b><br>
-        <%= form.text_field :name %>
-      </p>
-      <p>
-        <%= form.submit %>
-      </p>
-    <% end %>
-    ```
+  ```html+erb
+  <%= form_with model: zone do |form| %>
+    <p>
+      <b>Zone name</b><br>
+      <%= form.text_field :name %>
+    </p>
+    <p>
+      <%= form.submit %>
+    </p>
+  <% end %>
+  ```
 
 Although the same partial will be rendered into both views, Action View's submit helper will return "Create Zone" for the new action and "Update Zone" for the edit action.
 
 To pass a local variable to a partial in only specific cases use the `local_assigns`.
 
-* `index.html.erb`
+- `index.html.erb`
 
-    ```erb
-    <%= render user.articles %>
-    ```
+  ```erb
+  <%= render user.articles %>
+  ```
 
-* `show.html.erb`
+- `show.html.erb`
 
-    ```erb
-    <%= render article, full: true %>
-    ```
+  ```erb
+  <%= render article, full: true %>
+  ```
 
-* `_article.html.erb`
+- `_article.html.erb`
 
-    ```erb
-    <h2><%= article.title %></h2>
+  ```erb
+  <h2><%= article.title %></h2>
 
-    <% if local_assigns[:full] %>
-      <%= simple_format article.body %>
-    <% else %>
-      <%= truncate article.body %>
-    <% end %>
-    ```
+  <% if local_assigns[:full] %>
+    <%= simple_format article.body %>
+  <% else %>
+    <%= truncate article.body %>
+  <% end %>
+  ```
 
 This way it is possible to use the partial without the need to declare all local variables.
 
@@ -1278,18 +1274,18 @@ Assuming that the `@customer` instance variable contains an instance of the `Cus
 
 Partials are very useful in rendering collections. When you pass a collection to a partial via the `:collection` option, the partial will be inserted once for each member in the collection:
 
-* `index.html.erb`
+- `index.html.erb`
 
-    ```html+erb
-    <h1>Products</h1>
-    <%= render partial: "product", collection: @products %>
-    ```
+  ```html+erb
+  <h1>Products</h1>
+  <%= render partial: "product", collection: @products %>
+  ```
 
-* `_product.html.erb`
+- `_product.html.erb`
 
-    ```html+erb
-    <p>Product Name: <%= product.name %></p>
-    ```
+  ```html+erb
+  <p>Product Name: <%= product.name %></p>
+  ```
 
 When a partial is called with a pluralized collection, then the individual instances of the partial have access to the member of the collection being rendered via a variable named after the partial. In this case, the partial is `_product`, and within the `_product` partial, you can refer to `product` to get the instance that is being rendered.
 
@@ -1302,24 +1298,24 @@ There is also a shorthand for this. Assuming `@products` is a collection of `Pro
 
 Rails determines the name of the partial to use by looking at the model name in the collection. In fact, you can even create a heterogeneous collection and render it this way, and Rails will choose the proper partial for each member of the collection:
 
-* `index.html.erb`
+- `index.html.erb`
 
-    ```html+erb
-    <h1>Contacts</h1>
-    <%= render [customer1, employee1, customer2, employee2] %>
-    ```
+  ```html+erb
+  <h1>Contacts</h1>
+  <%= render [customer1, employee1, customer2, employee2] %>
+  ```
 
-* `customers/_customer.html.erb`
+- `customers/_customer.html.erb`
 
-    ```html+erb
-    <p>Customer: <%= customer.name %></p>
-    ```
+  ```html+erb
+  <p>Customer: <%= customer.name %></p>
+  ```
 
-* `employees/_employee.html.erb`
+- `employees/_employee.html.erb`
 
-    ```html+erb
-    <p>Employee: <%= employee.name %></p>
-    ```
+  ```html+erb
+  <p>Employee: <%= employee.name %></p>
+  ```
 
 In this case, Rails will use the customer or employee partials as appropriate for each member of the collection.
 
@@ -1391,38 +1387,38 @@ You may find that your application requires a layout that differs slightly from 
 
 Suppose you have the following `ApplicationController` layout:
 
-* `app/views/layouts/application.html.erb`
+- `app/views/layouts/application.html.erb`
 
-    ```html+erb
-    <html>
-    <head>
-      <title><%= @page_title or "Page Title" %></title>
-      <%= stylesheet_link_tag "layout" %>
-      <style><%= yield :stylesheets %></style>
-    </head>
-    <body>
-      <div id="top_menu">Top menu items here</div>
-      <div id="menu">Menu items here</div>
-      <div id="content"><%= content_for?(:content) ? yield(:content) : yield %></div>
-    </body>
-    </html>
-    ```
+  ```html+erb
+  <html>
+  <head>
+    <title><%= @page_title or "Page Title" %></title>
+    <%= stylesheet_link_tag "layout" %>
+    <style><%= yield :stylesheets %></style>
+  </head>
+  <body>
+    <div id="top_menu">Top menu items here</div>
+    <div id="menu">Menu items here</div>
+    <div id="content"><%= content_for?(:content) ? yield(:content) : yield %></div>
+  </body>
+  </html>
+  ```
 
 On pages generated by `NewsController`, you want to hide the top menu and add a right menu:
 
-* `app/views/layouts/news.html.erb`
+- `app/views/layouts/news.html.erb`
 
-    ```html+erb
-    <% content_for :stylesheets do %>
-      #top_menu {display: none}
-      #right_menu {float: right; background-color: yellow; color: black}
-    <% end %>
-    <% content_for :content do %>
-      <div id="right_menu">Right menu items here</div>
-      <%= content_for?(:news_content) ? yield(:news_content) : yield %>
-    <% end %>
-    <%= render template: "layouts/application" %>
-    ```
+  ```html+erb
+  <% content_for :stylesheets do %>
+    #top_menu {display: none}
+    #right_menu {float: right; background-color: yellow; color: black}
+  <% end %>
+  <% content_for :content do %>
+    <div id="right_menu">Right menu items here</div>
+    <%= content_for?(:news_content) ? yield(:news_content) : yield %>
+  <% end %>
+  <%= render template: "layouts/application" %>
+  ```
 
 That's it. The News views will use the new layout, hiding the top menu and adding a new right menu inside the "content" div.
 
